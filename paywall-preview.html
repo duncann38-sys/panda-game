@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Panda — Screen Previews</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body {
+  background: #060606;
+  font-family: 'DM Sans', sans-serif;
+  padding: 24px 16px 48px;
+  min-height: 100vh;
+}
+:root {
+  --green: #3DBE6C;
+  --gold: #f59e0b;
+  --red: #f87171;
+}
+
+/* page header */
+.page-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.page-header h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem; font-weight: 800;
+  color: #fff; letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.page-header p { font-size: 0.78rem; color: rgba(255,255,255,0.3); }
+
+/* flow indicator */
+.flow-bar {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; margin-bottom: 32px; flex-wrap: wrap;
+}
+.flow-step {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 100px; padding: 8px 16px;
+  font-size: 0.72rem; color: rgba(255,255,255,0.5);
+  white-space: nowrap;
+}
+.flow-step.active {
+  background: rgba(61,190,108,0.1);
+  border-color: rgba(61,190,108,0.3);
+  color: #fff;
+}
+.flow-step.paid {
+  background: rgba(245,158,11,0.1);
+  border-color: rgba(245,158,11,0.3);
+  color: #f59e0b;
+}
+.flow-arrow {
+  font-size: 0.7rem; color: rgba(255,255,255,0.2);
+  padding: 0 6px;
+}
+
+/* section label */
+.section-label {
+  text-align: center;
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: rgba(255,255,255,0.25);
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-label::before,.section-label::after {
+  content:''; flex:1; height:1px; background: rgba(255,255,255,0.07);
+}
+
+/* screens row */
+.screens-row {
+  display: flex; gap: 20px; justify-content: center;
+  flex-wrap: wrap; margin-bottom: 40px;
+}
+
+.screen-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.screen-tag {
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.15em;
+  text-transform: uppercase; color: rgba(255,255,255,0.25);
+}
+.screen-tag.green { color: var(--green); }
+.screen-tag.gold  { color: var(--gold); }
+
+/* the mock phone shell */
+.phone {
+  width: 320px;
+  background: #0f0f0f;
+  border-radius: 20px;
+  border: 1.5px solid rgba(255,255,255,0.07);
+  box-shadow: 0 32px 64px rgba(0,0,0,0.7), 0 0 0 1px rgba(61,190,108,0.06);
+  overflow: hidden;
+}
+
+/* screen body */
+.screen-body {
+  padding: 28px 22px 28px;
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center;
+  background: rgba(8,8,8,0.97);
+  min-height: 520px; justify-content: center;
+}
+
+/* ── shared components ── */
+.ey {
+  font-size: 0.6rem; font-weight: 600; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--green);
+  display: flex; align-items: center; gap: 7px;
+  margin-bottom: 10px; justify-content: center;
+}
+.ey.gold-c { color: var(--gold); }
+.ey::before,.ey::after { content:''; width:10px; height:1.5px; background:currentColor; border-radius:2px; }
+
+h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.75rem; font-weight: 800; line-height: 1.08;
+  letter-spacing: -0.03em; color: #fff; margin-bottom: 10px;
+}
+h2 .g { color: var(--green); }
+h2 .gold { color: var(--gold); }
+
+.sub {
+  font-size: 0.8rem; color: rgba(255,255,255,0.42);
+  line-height: 1.7; margin-bottom: 18px; max-width: 260px;
+}
+
+/* paywall amount */
+.amount {
+  font-family: 'Syne', sans-serif;
+  font-size: 4.5rem; font-weight: 800; color: var(--gold);
+  line-height: 1; margin: 12px 0 4px;
+  position: relative; display: inline-block;
+}
+.amount::before {
+  content:''; position:absolute; inset:-12px; border-radius:50%;
+  border: 2px solid rgba(245,158,11,0.2);
+  animation: pulse 2s ease-out infinite;
+}
+.amount::after {
+  content:''; position:absolute; inset:-24px; border-radius:50%;
+  border: 1px solid rgba(245,158,11,0.1);
+  animation: pulse 2s ease-out infinite 0.7s;
+}
+@keyframes pulse { 0%{transform:scale(1);opacity:.7} 100%{transform:scale(2.2);opacity:0} }
+
+.one-time { font-size: 0.65rem; color: rgba(255,255,255,0.22); margin-bottom: 16px; letter-spacing: 0.06em; }
+
+.streak-tag {
+  background: linear-gradient(135deg, rgba(245,158,11,0.14), rgba(245,158,11,0.05));
+  border: 1px solid rgba(245,158,11,0.28);
+  border-radius: 100px; padding: 6px 16px;
+  font-size: 0.68rem; color: var(--gold); font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px;
+}
+
+.perks {
+  width: 100%; background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07); border-radius: 12px;
+  padding: 12px 14px; margin-bottom: 18px; text-align: left;
+}
+.perk-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 0; font-size: 0.75rem; color: rgba(255,255,255,0.55);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.perk-row:last-child { border-bottom: none; }
+.perk-row .pe { font-size: 1rem; }
+.perk-row strong { color: rgba(255,255,255,0.85); }
+
+/* buttons */
+.btn {
+  font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 800;
+  padding: 14px 32px; border-radius: 12px; border: none; cursor: pointer;
+  width: 100%; letter-spacing: 0.01em; position: relative; overflow: hidden;
+  margin-bottom: 8px;
+}
+.btn.gold-btn { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; box-shadow: 0 8px 24px rgba(245,158,11,0.35); }
+.btn.green-btn { background: var(--green); color: #fff; box-shadow: 0 8px 24px rgba(61,190,108,0.35); }
+.secure-note { font-size: 0.6rem; color: rgba(255,255,255,0.18); letter-spacing: 0.06em; margin-top: 4px; }
+
+/* email form */
+.input-field {
+  width: 100%; background: rgba(255,255,255,0.05);
+  border: 1.5px solid rgba(255,255,255,0.1); border-radius: 11px;
+  padding: 12px 15px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem; color: #fff; margin-bottom: 9px; display: block;
+}
+.input-field::placeholder { color: rgba(255,255,255,0.2); }
+.input-field.focused { border-color: var(--green); box-shadow: 0 0 0 3px rgba(61,190,108,0.15); }
+
+/* code box */
+.code-box {
+  background: rgba(61,190,108,0.09); border: 1.5px solid rgba(61,190,108,0.3);
+  border-radius: 12px; padding: 14px 20px; margin: 12px 0;
+  font-family: 'Syne', sans-serif; font-size: 1.25rem; font-weight: 800;
+  color: var(--green); letter-spacing: 0.18em;
+}
+
+/* data capture info box */
+.data-box {
+  max-width: 680px; margin: 0 auto 32px;
+  background: rgba(61,190,108,0.05); border: 1px solid rgba(61,190,108,0.15);
+  border-radius: 16px; padding: 20px 24px;
+}
+.data-box h3 {
+  font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 800;
+  color: #fff; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+}
+.data-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media(max-width: 500px) { .data-cols { grid-template-columns: 1fr; } }
+.data-col {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px; padding: 14px;
+}
+.data-col h4 { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); margin-bottom: 8px; }
+.data-col.gold-col h4 { color: var(--gold); }
+.data-item { display: flex; align-items: flex-start; gap: 7px; margin-bottom: 6px; font-size: 0.74rem; color: rgba(255,255,255,0.55); line-height: 1.4; }
+.data-item .dot { width: 5px; height: 5px; background: var(--green); border-radius: 50%; flex-shrink:0; margin-top: 5px; }
+.data-col.gold-col .dot { background: var(--gold); }
+.data-item strong { color: rgba(255,255,255,0.8); }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>🐼 Panda Credits — Screen Previews</h1>
+  <p>How the paywall flow looks to players · Levels 7 → 8 → 9 → 10</p>
+</div>
+
+<!-- FLOW BAR -->
+<div class="flow-bar">
+  <div class="flow-step">Levels 1–7 Free</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step active">📧 Email Gate</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step paid">💳 £3 Paywall</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step paid">🔥 Levels 8–10</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step">🎟️ Code Revealed</div>
+</div>
+
+<!-- SCREENS -->
+<div class="screens-row">
+
+  <!-- SCREEN 1: EMAIL GATE -->
+  <div class="screen-wrap">
+    <div class="screen-tag green">① Email Gate — shown after Level 7</div>
+    <div class="phone">
+      <div class="screen-body">
+        <span style="font-size:2.4rem;margin-bottom:8px;display:block">🔒</span>
+        <div class="ey">Unlock Levels 8, 9 &amp; 10</div>
+        <h2>You've earned<br/><span class="g">847 credits!</span></h2>
+        <p class="sub">Enter your details to unlock the final 3 levels and claim your credits at launch.</p>
+        <input class="input-field focused" type="email" placeholder="your@email.com" value=""/>
+        <input class="input-field" type="text" placeholder="Your name"/>
+        <button class="btn green-btn" style="margin-top:8px">Continue to Unlock →</button>
+        <p class="secure-note" style="margin-top:6px">Your details are saved — credits are yours regardless</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: PAYWALL -->
+  <div class="screen-wrap">
+    <div class="screen-tag gold">② Paywall — shown after email submitted</div>
+    <div class="phone">
+      <div class="screen-body">
+        <div class="ey gold-c">Levels 8, 9 &amp; 10 · Locked</div>
+        <div class="amount">£3</div>
+        <p class="one-time">One time · Unlocks all 3 final levels</p>
+        <h2>The <span class="gold">Final 3 Levels.</span></h2>
+        <div class="perks">
+          <div class="perk-row"><span class="pe">💎</span> <span><strong>Triple credits</strong> on every catch</span></div>
+          <div class="perk-row"><span class="pe">🚀</span> <span><strong>More boosts &amp; diamonds</strong> drop</span></div>
+          <div class="perk-row"><span class="pe">🎁</span> <span><strong>Founder's code worth £10</strong> off your first Panda transaction</span></div>
+        </div>
+        <div class="streak-tag">🔥 You've already earned 847 credits — don't stop now</div>
+        <button class="btn gold-btn">Pay £3 &amp; Unlock Levels 8–10 →</button>
+        <p class="secure-note">Secure payment via Stripe · No subscription · One time</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: CODE REVEAL -->
+  <div class="screen-wrap">
+    <div class="screen-tag">③ Code Reveal — after Level 10 complete</div>
+    <div class="phone">
+      <div class="screen-body">
+        <span style="font-size:2.4rem;margin-bottom:8px;display:block">🐼</span>
+        <div class="ey">Your Code</div>
+        <h2>Screenshot &amp;<br/><span class="g">save this.</span></h2>
+        <div class="code-box">PANDA-X7KM3R9T 📋</div>
+        <p class="sub" style="font-size:0.74rem;margin-bottom:16px">
+          Worth <strong style="color:var(--green)">£16</strong> in real Panda credit at launch · Valid forever
+        </p>
+        <a href="#" class="btn green-btn" style="text-decoration:none;display:block">📧 Email me my code</a>
+        <button class="btn" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.09)">Play again →</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DATA CAPTURE INFO -->
+<div class="section-label">Where your data comes from</div>
+<div class="data-box">
+  <h3>📊 What you capture &amp; where</h3>
+  <div class="data-cols">
+    <div class="data-col">
+      <h4>🎮 From the game (Email Gate)</h4>
+      <div class="data-item"><div class="dot"></div><span><strong>Email address</strong> — captured before paywall, so you have it even if they don't pay</span></div>
+      <div class="data-item"><div class="dot"></div><span><strong>Name</strong> — self-entered</span></div>
+      <div class="data-item"><div class="dot"></div><span><strong>Credits earned</strong> — included in the mailto when they email their code</span></div>
+      <div class="data-item"><div class="dot"></div><span><strong>Best combo</strong> — also in the email, signals engagement level</span></div>
+      <div class="data-item"><div class="dot"></div><span>Arrives in your <strong>duncan@pandaindustry.co</strong> inbox when they tap "Email me my code"</span></div>
+    </div>
+    <div class="data-col gold-col">
+      <h4>💳 From Stripe (Paywall)</h4>
+      <div class="data-item"><div class="dot"></div><span><strong>Email address</strong> — Stripe always captures this at checkout</span></div>
+      <div class="data-item"><div class="dot"></div><span><strong>Full name</strong> — entered at Stripe checkout</span></div>
+      <div class="data-item"><div class="dot"></div><span><strong>Payment confirmed</strong> — you can see all payers in Stripe dashboard</span></div>
+      <div class="data-item"><div class="dot"></div><span><strong>Country / card type</strong> — available in Stripe customer record</span></div>
+      <div class="data-item"><div class="dot"></div><span>Export as CSV anytime from <strong>Stripe → Customers</strong></span></div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">One thing to note</div>
+<div style="max-width:680px;margin:0 auto;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);border-radius:12px;padding:16px 20px;font-size:0.78rem;color:rgba(255,255,255,0.5);line-height:1.7">
+  ⚠️ Right now the game <strong style="color:rgba(255,255,255,0.8)">can't automatically verify</strong> that someone paid Stripe before showing levels 8–10. The pay button opens Stripe in a new tab — when they come back to the game they still see the paywall. To auto-unlock, you'd need a Stripe success redirect URL that calls <code style="color:var(--green);font-size:0.76rem">window.unlockPaidLevels()</code> — or just add a simple "I've paid" button for now that trusts the honour system, since the game itself is low stakes at £3.
+</div>
+
+</body>
+</html>
